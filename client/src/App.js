@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import {withStyles} from '@material-ui/core/styles';
 
-{/** material를 이용한 css style 설정 */}
+/** material를 이용한 css style 설정 */
 
 const styles = theme => ({
   root : {
@@ -19,37 +19,27 @@ const styles = theme => ({
       minWidth: 768
     } 
 })
-const customers = [
-  {
-  'id': 1,
-  'image': 'http://placeimg.com/64/64/1',
-  'name':'홍길동',
-  'birthday':'961222',
-  'gender':'남자',
-  'job': '대학생'
-  },
-  {
-    'id': 2,
-    'image': 'http://placeimg.com/64/64/2',
-    'name':'김개똥',
-    'birthday':'880512',
-    'gender':'남자',
-    'job': '직장인'
-    },
-    {
-      'id': 3,
-      'image': 'http://placeimg.com/64/64/3',
-      'name':'이슬이',
-      'birthday':'941125',
-      'gender':'여자',
-      'job': '대학생'
-      },
-]
 
 
 class App extends Component {
+  state= {
+    customers: ""
+  }
+  
+  componentDidMount(){
+    this.callApi()
+    .then(res => this.setState({customers: res}))
+    .catch(err=> console.log(err))
+  }
+  
+  callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
   render() {
-    const { classes } = this.props; {/** 위에 정의한 styles를 적용하기 위한 classes변수 선언*/}
+    const { classes } = this.props; /** 위에 정의한 styles를 적용하기 위한 classes변수 선언*/
     return(
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -64,10 +54,10 @@ class App extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-          { customers.map(t => {
+          { this.state.customers ? this.state.customers.map(t => {
            return (<Customer  key={t.id}  id = {t.id}  image = {t.image}  name = {t.name}
                     birthday={t.birthday}  gender={t.gender}  job={t.job} />);
-    }) }
+    }) : ""}
           </TableBody>
         </Table>
     
@@ -76,4 +66,4 @@ class App extends Component {
 }}
 
 export default withStyles (styles) (App);
-{/** withStyles를 적용하기 위해 내보내기 설정 */}
+/** withStyles를 적용하기 위해 내보내기 설정 */
