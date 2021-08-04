@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {withStyles} from '@material-ui/core/styles';
 
 /** material를 이용한 css style 설정 */
@@ -15,18 +16,23 @@ const styles = theme => ({
   root : {
     width: '100%', marginTop: theme.spacing.unit * 3, overflowX:"auto"
    },
-    table : {
+  table : {
       minWidth: 768
-    } 
+  },
+  progress : {
+    margin: theme.spacing.unit * 2
+  }
 })
 
 
 class App extends Component {
   state= {
-    customers: ""
+    customers : "",
+    completed : 0 
   }
   
   componentDidMount(){
+    this.timer = setInterval(this.progress, 20);
     this.callApi()
     .then(res => this.setState({customers: res}))
     .catch(err=> console.log(err))
@@ -37,6 +43,11 @@ class App extends Component {
     const body = await response.json();
     return body;
   }
+
+  progress = () => {
+    const {completed} = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  } 
 
   render() {
     const { classes } = this.props; /** 위에 정의한 styles를 적용하기 위한 classes변수 선언*/
@@ -57,7 +68,13 @@ class App extends Component {
           { this.state.customers ? this.state.customers.map(t => {
            return (<Customer  key={t.id}  id = {t.id}  image = {t.image}  name = {t.name}
                     birthday={t.birthday}  gender={t.gender}  job={t.job} />);
-    }) : ""}
+    }) : 
+    <TableRow>
+      <TableCell colSpan="6" align="center">
+        <CircularProgress ClassName = {classes.progress} variant="determinate" value={this.state.completed}/>
+      </TableCell>
+      </TableRow>
+      }
           </TableBody>
         </Table>
     
