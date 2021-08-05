@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import Customer from './components/Customer';
+import CustomerAdd from './components/CustomerAdd';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -52,6 +53,7 @@ class App extends Component {
   render() {
     const { classes } = this.props; /** 위에 정의한 styles를 적용하기 위한 classes변수 선언*/
     return(
+      <div>
       <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
@@ -77,8 +79,9 @@ class App extends Component {
       }
           </TableBody>
         </Table>
-    
-    </Paper>
+        </Paper>
+        <CustomerAdd/>
+    </div>
     )    
 }}
 
